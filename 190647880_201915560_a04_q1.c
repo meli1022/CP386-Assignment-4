@@ -23,19 +23,101 @@
 #include<pthread.h>
 #include<string.h>
 
+typedef struct customer
+{
+	int customerID; // the id for the customer
+	int item[4]; // can have up to 5 items for the customer
+} Customer;
+
+int readFile(char *fileName, Customer** customer);
+
+int readFile(char* fileName,Customer** customer ){
+
+	FILE *in = fopen(fileName, "r");
+		if (!in) {
+			printf("Error in opening input file...exiting with error code -1\n");
+			return -1;
+		}
+
+	struct stat st;
+	fstat(fileno(in), &st);
+	char *fileContent = (char*) malloc(((int) st.st_size + 1) * sizeof(char));
+	fileContent[0] = '\0';
+
+	while(!feof(in))
+	{
+		char line[100];
+		if(fgets(line,100,in)!=NULL)
+		{
+			strncat(contentsFile,line,strlen(line));
+		}
+	}
+	fclose(in);
+
+	char *command = NULL;
+	int customerCount = 0;
+	char *fileCopy = (char*) malloc((strlen(fileContent) + 1) * sizeof(char));
+	strcpy(fileCopy, fileContent);
+	command = strtok(fileCopy, "\r\n");
+
+	while(commands!=NULL){
+		customerCount++; // counting of customers and increment by 1
+		command = strtok(NULL,"\r\n");
+	}
+	*customer = (Customer*)malloc(sizeof(customer) * customerCount);
+
+	char *lines[customerCount];
+		command = NULL;
+		int i = 0;
+		command = strtok(fileContent, "\r\n");
+
+	while (command!=NULL){
+		lines[i] = malloc(sizeof(command) * sizeof(char));
+		strcpy(lines[i], command);
+		i++;
+		command = strtok(NULL, "\r\n");
+	}
+
+	for (int k = 0; k < customerCount; k++) {
+			char *token = NULL;
+			int j = 0;
+			token = strtok(lines[k], ";");
+			while (token != NULL) {
+
+				if (j == 0)
+					(*customer)[i].item[0] = atoi(token); //set resource number for item 1 in index 0
+				else if (j == 1)
+					(*customer)[i].item[1] = atoi(token); //set resource number for item 2 in index 1
+				else if(j == 2)
+					(*customer)[i].item[2] = atoi(token); // set resource number for item 3 in index 2
+				else if(j == 3)
+					(*customer)[i].item[3] = atoi(token); // set resource number for item 4 in index 3
+				else if(j == 4)
+					(*customer)[i].item[4] = atoi(token); // set resource number for item 5 in index 4
+				j++;
+				token = strtok(NULL, ";");
+			}
+	}
+
+
+	return customerCount;
+}
+
+
+
+
 void* threadRun(void *t); //the thread function, the code executed by each thread
 
 //banker's algorithm.
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<unistd.h>
-#include<pthread.h>
-#include<string.h>
+
 
 int main(int argc, char *argv[]) {
-	int n = 0; //5/ //requests from n customers for m resource types.
-	int m = 0; //4?-
+
+	Customer *customer = NULL;
+
+	int numofCustomers = readFile("sample4_in.txt",&customer);
+
 
 	//all arrays/matrix...
 	int available = 0; //array
@@ -47,18 +129,10 @@ int main(int argc, char *argv[]) {
 
 	printf("%d %d %d %d", available, maximum, allocated, need);
 
-	char command[20];
+	char commands[20];
 
-	FILE *in = fopen("sample4_in.txt", "r");
-	//get n and m?
-	n = 5; //maybe num lines in file?
-	m = 4; //-maybe how many in 1 line of file?
 
-	fclose(in);
-
-	printf("%d %d\n", n, m); //debug
-
-	printf("Number of Customers: %d\n", n);
+	printf("Number of Customers: %d\n", numofCustomers);
 	printf("Currently Available resources: 10 5 7 8 \n"); //10 5 7 8 from file
 	printf("Maximum resources from file:\n"); //contents of file-print line by line
 
@@ -68,20 +142,20 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		//input
 		printf("Enter Command: ");
-		scanf("%s", command);
+		scanf("%s", commands);
 
-		if (strcmp(command, "RQ") == 0) { //compare
+		if (strcmp(commands, "RQ") == 0) { //compare
 			//	eg RQ 0 1 0 0 1 //customer/thread 0 were to request the resources (1, 0, 0, 1),
 
 			////if customer_number>maximum: invalid} {else
 			printf("State is safe, and request is satisfied\n");
 
-		} else if (strcmp(command, "RL") == 0) {
+		} else if (strcmp(commands, "RL") == 0) {
 			//eg RL 4 1 0 0 0 // customer 4 wishes to release the resources (1, 0, 0, 0),
 
 			printf("The resources have been released successfully\n");
 
-		} else if (strcmp(command, "Status") == 0) {
+		} else if (strcmp(commands, "Status") == 0) {
 			;
 			/*
 
@@ -89,14 +163,14 @@ int main(int argc, char *argv[]) {
 			 (available, maximum, allocation, and need).
 			 *
 			 */
-		} else if (strcmp(command, "Run") == 0) {
+		} else if (strcmp(commands, "Run") == 0) {
 			;
 			/*
 
 			 Run command executes customers as threads in a safe sequence. Each thread
 			 requests the resources it needs, releases them, and lets the next thread in the sequence run.
 			 */
-		} else if (strcmp(command, "Exit") == 0) {
+		} else if (strcmp(commands, "Exit") == 0) {
 			/*
 			 *  Exit command is used to exit the loop and the program
 			 */
@@ -113,7 +187,7 @@ void* threadRun(void *t) {
 	printf("Thread has finished/n");
 	printf("Thread is releasing resources/n");
 
-//New Available status.
+	//New Available status.
 	pthread_exit(0);
 }
 
