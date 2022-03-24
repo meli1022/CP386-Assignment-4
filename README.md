@@ -6,7 +6,7 @@ Banker's and Best Fit Algorithm Program
 This program implements the  banker's algorithm and best-fit algorithm. 
 
 **Makefile:**
-The purpose of the makefile file is to be easily build an executable that might take many commands to create. 
+The purpose of the makefile file is to easily build an executable that might take many commands to create. 
 
 **Features:**
 The features of the banker algorithm program include:
