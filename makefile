@@ -1,16 +1,20 @@
-#Do not edit the contents of this file.
+# Do not edit the contents of this file.
 CC = gcc
-CFLAGS = -Wall -g -std=gnu99
+CFLAGS = -Werror -Wall -g -std=gnu99
 LDFLAGS = -lrt -lpthread
-TARGET = Question1  
-OBJFILES = Question1.o
+TARGET = 190647880_201915560_a04_q1 190647880_201915560_a04_q2
+OBJFILES = 190647880_201915560_a04_q1.o 190647880_201915560_a04_q2.o 
 all: $(TARGET)
+190647880_201915560_a04_q1: 190647880_201915560_a04_q1.c
+	$(CC) $(CFLAGS) -o 190647880_201915560_a04_q1 190647880_201915560_a04_q1.c $(LDFLAGS)
+190647880_201915560_a04_q2: 190647880_201915560_a04_q2.c
+	$(CC) $(CFLAGS) -o 190647880_201915560_a04_q2 190647880_201915560_a04_q2.c $(LDFLAGS)
 
-Question1: Question1.c
-	$(CC) $(CFLAGS) -o Question1 Question1.c $(LDFLAGS)
-	
-runq1: Question1
-	./Question1 10 5 7 8
-	
+
+runq1: 190647880_201915560_a04_q1
+	./190647880_201915560_a04_q1 10 5 7 8
+runq2: 190647880_201915560_a04_q2
+	./190647880_201915560_a04_q2 1000000
+
 clean:
 	rm -f $(OBJFILES) $(TARGET) *~ 
