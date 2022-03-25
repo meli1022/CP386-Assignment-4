@@ -22,14 +22,13 @@
 #include<unistd.h>
 #include<pthread.h>
 #include<string.h>
+#include <sys/stat.h>
 
 typedef struct customer
 {
 	int customerID; // the id for the customer
 	int item[4]; // can have up to 5 items for the customer
 } Customer;
-
-int readFile(char *fileName, Customer** customer);
 
 int readFile(char* fileName,Customer** customer ){
 
@@ -49,7 +48,7 @@ int readFile(char* fileName,Customer** customer ){
 		char line[100];
 		if(fgets(line,100,in)!=NULL)
 		{
-			strncat(contentsFile,line,strlen(line));
+			strncat(fileContent,line,strlen(line));
 		}
 	}
 	fclose(in);
@@ -60,7 +59,7 @@ int readFile(char* fileName,Customer** customer ){
 	strcpy(fileCopy, fileContent);
 	command = strtok(fileCopy, "\r\n");
 
-	while(commands!=NULL){
+	while(command!=NULL){
 		customerCount++; // counting of customers and increment by 1
 		command = strtok(NULL,"\r\n");
 	}
