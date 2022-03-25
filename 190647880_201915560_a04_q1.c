@@ -80,21 +80,21 @@ int readFile(char* fileName,Customer** customer ){
 	for (int k = 0; k < customerCount; k++) {
 			char *token = NULL;
 			int j = 0;
-			token = strtok(lines[k], ";");
+			token = strtok(lines[k], ",");
 			while (token != NULL) {
 
 				if (j == 0)
-					(*customer)[i].item[0] = atoi(token); //set resource number for item 1 in index 0
+					(*customer)[k].item[0] = atoi(token); //set resource number for item 1 in index 0
 				else if (j == 1)
-					(*customer)[i].item[1] = atoi(token); //set resource number for item 2 in index 1
+					(*customer)[k].item[1] = atoi(token); //set resource number for item 2 in index 1
 				else if(j == 2)
-					(*customer)[i].item[2] = atoi(token); // set resource number for item 3 in index 2
+					(*customer)[k].item[2] = atoi(token); // set resource number for item 3 in index 2
 				else if(j == 3)
-					(*customer)[i].item[3] = atoi(token); // set resource number for item 4 in index 3
+					(*customer)[k].item[3] = atoi(token); // set resource number for item 4 in index 3
 				else if(j == 4)
-					(*customer)[i].item[4] = atoi(token); // set resource number for item 5 in index 4
+					(*customer)[k].item[4] = atoi(token); // set resource number for item 5 in index 4
+				token = strtok(NULL, ",");
 				j++;
-				token = strtok(NULL, ";");
 			}
 	}
 
@@ -133,8 +133,18 @@ int main(int argc, char *argv[]) {
 
 	printf("Number of Customers: %d\n", numofCustomers);
 	printf("Currently Available resources: 10 5 7 8 \n"); //10 5 7 8 from file
-	printf("Maximum resources from file:\n"); //contents of file-print line by line
+	printf("Maximum resources from file:\n" ); //contents of file-print line by line
+	for (int i=0; i <5; i++){
 
+		printf("%d,",customer[i].item[0]);
+		printf("%d,",customer[i].item[1]);
+		printf("%d,",customer[i].item[2]);
+		printf("%d",customer[i].item[3]);
+
+		printf("\n");
+
+
+	}
 	//// safety algorithm
 	//, if it leaves the system in a safe state,otherwise will deny it.
 
