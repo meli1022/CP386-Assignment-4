@@ -1,5 +1,14 @@
 /*
- *  passing the number of available resources of each type via
+------------------------------
+Authors: Melissa Pinto
+		 Phoebe Shulman
+IDs:	190647880
+		201915560
+Github: https://github.com/meli1022/CP386-Assignment-4
+------------------------------
+
+
+passing the number of available resources of each type via
  command line to initialize the available array by these values.
 
 
@@ -26,8 +35,8 @@
 
 typedef struct customer
 {
-	int customerID; // the id for the customer
-	int item[4]; // can have up to 5 items for the customer
+	int resource[4]; // can have up to 5 resources for the customer
+
 } Customer;
 
 int readFile(char* fileName,Customer** customer ){
@@ -84,15 +93,15 @@ int readFile(char* fileName,Customer** customer ){
 			while (token != NULL) {
 
 				if (j == 0)
-					(*customer)[k].item[0] = atoi(token); //set resource number for item 1 in index 0
+					(*customer)[k].resource[0] = atoi(token); //set resource number for resource 1 in index 0
 				else if (j == 1)
-					(*customer)[k].item[1] = atoi(token); //set resource number for item 2 in index 1
+					(*customer)[k].resource[1] = atoi(token); //set resource number for resource 2 in index 1
 				else if(j == 2)
-					(*customer)[k].item[2] = atoi(token); // set resource number for item 3 in index 2
+					(*customer)[k].resource[2] = atoi(token); // set resource number for resource 3 in index 2
 				else if(j == 3)
-					(*customer)[k].item[3] = atoi(token); // set resource number for item 4 in index 3
+					(*customer)[k].resource[3] = atoi(token); // set resource number for resource 4 in index 3
 				else if(j == 4)
-					(*customer)[k].item[4] = atoi(token); // set resource number for item 5 in index 4
+					(*customer)[k].resource[4] = atoi(token); // set resource number for resource 5 in index 4
 				token = strtok(NULL, ",");
 				j++;
 			}
@@ -136,10 +145,10 @@ int main(int argc, char *argv[]) {
 	printf("Maximum resources from file:\n" ); //contents of file-print line by line
 	for (int i=0; i <5; i++){
 
-		printf("%d,",customer[i].item[0]);
-		printf("%d,",customer[i].item[1]);
-		printf("%d,",customer[i].item[2]);
-		printf("%d",customer[i].item[3]);
+		printf("%d,",customer[i].resource[0]);
+		printf("%d,",customer[i].resource[1]);
+		printf("%d,",customer[i].resource[2]);
+		printf("%d",customer[i].resource[3]);
 
 		printf("\n");
 
@@ -191,6 +200,8 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
+
+//Function to run the customer threads
 void* threadRun(void *t) {
 	printf("Thread has started/n");
 	printf("Thread has finished/n");
@@ -199,6 +210,7 @@ void* threadRun(void *t) {
 	//New Available status.
 	pthread_exit(0);
 }
+
 
 /*
  int mainEg(int argc, char *argv[]) {
