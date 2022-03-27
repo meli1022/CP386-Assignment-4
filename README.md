@@ -1,14 +1,12 @@
 # CP386-Assignment-4
 
-Banker's and Best Fit Algorithm Program
-
-##Project:
+## Project:
 This program implements the banker's algorithm and best-fit algorithm. 
 
-##Makefile:
+## Makefile:
 The purpose of the makefile file is to easily build an executable that might take many commands to create. To use the makefile, type `make runq1` or `make runq2` to execute each program in terminal.
 
-##Features:
+## Features:
 **The features of the banker algorithm program and best fit algorithm include:**
 
 RQ - Request resources to fill allocation array
@@ -32,18 +30,18 @@ Exit - Exit out of program
 Enter Command: Exit
 ```
 
-##Contribution:
+## Contribution:
 Melissa - readFile
 Phoebe - 
 
-##Test Case Q1:
+## Test Case Q1:
 RQ 0 1 0 0 1
 RQ 1 1 1 1 1
 RQ 2 2 2 2 2
 RQ 3 1 1 1 1
 RQ 4 1 0 0 0
 
-##Test Case Q2:
+## Test Case Q2:
 RQ P0 200000 B
 RQ P1 350000 B
 RQ P2 300000 B
@@ -51,10 +49,10 @@ RL P0
 RQ P4 150000 B
 RQ P5 80000 B
 
-##License:
+## License:
 The license for this program is GNU GPLv3 which lets people to do almost anything they want with our project, except distributing closed source versions. [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0)
 
-#Developers
+## Developers
 - [Melissa Pinto](https://github.com/meli1022)
 - [Phoebe Shulman](https://github.com/Phoebe-S-9)
 
