@@ -31,7 +31,8 @@ Enter Command: Exit
 ```
 
 ## Contribution:
-Melissa - readFile
+Melissa - 
+`int readFile(char* fileName,Customer** customer)`
 Phoebe - 
 
 ## Test Case Q1:
