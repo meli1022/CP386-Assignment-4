@@ -44,11 +44,11 @@ Phoebe -
 
 ## Test Case Q2:
 `RQ P0 200000 B`
-`RQ P1 350000 B
-`RQ P2 300000 B
-`RL P0
-`RQ P4 150000 B
-`RQ P5 80000 B
+`RQ P1 350000 B`
+`RQ P2 300000 B`
+`RL P0`
+`RQ P4 150000 B`
+`RQ P5 80000 B`
 
 ## License:
 The license for this program is GNU GPLv3 which lets people to do almost anything they want with our project, except distributing closed source versions. [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0)
