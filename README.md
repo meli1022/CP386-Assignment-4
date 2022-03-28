@@ -34,8 +34,8 @@ Enter Command: Exit
 Melissa - 
 `int readFile(char* fileName,Customer** customer)`
 Phoebe - 
-`int testing()`
-
+`void* threadRun(void *t); `
+`int main(int argc, char *argv[]) `
 ## Test Case Q1:
 `RQ 0 1 0 0 1`
 `RQ 1 1 1 1 1`
