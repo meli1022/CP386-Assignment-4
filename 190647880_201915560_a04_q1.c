@@ -39,7 +39,7 @@
 typedef struct customer {
 	int resource[4]; // can have up to 5 resources for the customer
 
-//each thread also need a needed, availble. ?and allocated - of its own?
+//each thread also need a needed, availble. ?and allocated - of its own?//and id
 } Customer;
 
 int readFile(char *fileName, Customer **customer) {
@@ -105,7 +105,7 @@ int readFile(char *fileName, Customer **customer) {
 }
 
 void* threadRun(void *t); //the thread function, the code executed by each thread
-
+//void* safety();//check if safe
 //banker's algorithm.
 
 int main(int argc, char *argv[]) {
@@ -129,6 +129,8 @@ int main(int argc, char *argv[]) {
 	int maximum[5][4]; // maximum demand of each customer  //[4][5] //argc-1,numcusomters
 	int allocated[5][4]; //amount currently allocated to each customer
 	int need[5][4];	 //remaining need of each customer
+
+	//int safeSequnce[]; //dyanmic?//ad p1 values to it
 
 	char commands[20]; //RQ. Stastus. etc
 	int p1[20], p2[20], p3[20], p4[20], p5[20];	//p1 - process number . p2 - p5: num resources ?//char
@@ -196,9 +198,44 @@ int main(int argc, char *argv[]) {
 
 			//scanf("%d %d %d %d %d", p1, p2, p3, p4, p5);
 
+			//do saftey algo here..
+
+			//saftye algo //to check if this would be safe?
+			int isSafe = 1;
+			int finish[5];
+			for (int i = 0; i < numofCustomers; i++) { //5
+				finish[i] = 0; //false
+
+			}
+
+			//find index i
+
+			for (int i = 0; i < numofCustomers; i++) { //5
+
+				if (finish[i] == 0 && need[i][0] <= available[i]) { //which need and alloc to compare?
+					printf("yes");
+
+					available[i] = available[i] + allocated[i][0];
+					finish[i] = 1; //true
+
+				}
+			}
+			for (int i = 0; i < numofCustomers; i++) { //5
+				if (finish[i] == 0) {
+					isSafe = 0; //false
+				}
+
+			}
+
+			if (isSafe == 1) {
+
+				printf("isSafe %d\n", isSafe);
+//do resource alloc
+
+			}
 			//assume safe
 			scanf("%d %d %d %d", &allocated[2][0], &allocated[2][1],
-					&allocated[2][2], &allocated[2][3]);//p1 = 2 //how get p1?
+					&allocated[2][2], &allocated[2][3]); //p1 = 2 //how get p1?
 
 			////if customer_number[i][j]>maximum[i][j]: invalid} {else
 
@@ -296,8 +333,9 @@ int main(int argc, char *argv[]) {
 			 */
 
 			//call thred run?
-			printf("Safe Sequence is: 1 3 2 4 0\n"); //need build up values
+			printf("Safe Sequence is: 1 3 2 4 0\n"); //need build up values--thes are p1 values
 			//threadRun()
+			//idea- maybe a semphore so thread runs fully?
 			pthread_create(&t1, NULL, &threadRun, NULL);
 
 		} else if (strcmp(commands, "Exit") == 0
@@ -332,5 +370,4 @@ void* threadRun(void *t) {
 	printf("New Available: "); //5 2 4 4")
 	pthread_exit(0);
 }
-
 
