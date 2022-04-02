@@ -18,7 +18,7 @@
  7 of the third type, and 8 of the fourth type
  */
 
-// working: status,exit, invalid input
+// working: status,exit, invalid input //maybe RQ and RL?
 /*
  * commits:
  * skeleton/frame work
@@ -27,6 +27,7 @@
  * input
  * added to thread run
  *status comand
+
  */
 
 // safety algorithm// if it leaves the system in a safe state,otherwise will deny it.
@@ -195,47 +196,183 @@ int main(int argc, char *argv[]) {
 			//	eg RQ 0 1 0 0 1
 			//customer/thread 0 were to request the resources (1, 0, 0, 1)
 
+			/*
+			 * RQ:
+			 * input = process id, requests
+			 * resouces request algo
+			 * if safty algo: allocate. need = max - alloc
+			 * else wati?
+			 *
+			 */
 			//get other inputs
+			/*
+			 scanf("%s", p1);
+			 int processID = atoi(p1);
+			 printf("process id: %d\n", processID); //process id
 
-			for (int i = 0; i < numResourceTypes + 1; i++) { //+1 for process id
-				//scanf("%s", &temp[i]);
+			 for (int i = 0; i < numResourceTypes; i++) { //put input  in need? - at row process id?
+
+			 scanf("%s", p1);
+			 need[processID][i] = atoi(p1);
+			 }
+			 */
+
+			/*
+
+			 for (int i = 0; i < numResourceTypes + 1; i++) { //+1 for process id
+			 //scanf("%s", &temp[i]);
+
+			 scanf("%s", p1);
+			 temp[i] = atoi(p1);
+			 }
+
+			 printf("input\n");
+			 for (int i = 0; i < numResourceTypes + 1; i++) {//+1 for process id
+			 printf("%d ", temp[i]);
+			 }
+			 printf("\n");
+
+			 //printf("process id: %d\n", temp[0]); //process id
+
+			 int processID = temp[0];
+			 printf("process id: %d\n", processID); //process id
+			 */
+
+			//put temp in need? - at row process id?
+			//no: tmpe is requested
+//			 for (int j = 0; j < numResourceTypes; j++) { //4
+//
+//			 need[processID][j] = temp[j + 1]; //not includ process id//0;
+//			 }
+			scanf("%s", p1);
+			int processID = atoi(p1);
+			//printf("process id: %d\n", processID); //process id
+
+			for (int i = 0; i < numResourceTypes; i++) { //requested
 
 				scanf("%s", p1);
 				temp[i] = atoi(p1);
+				//printf("%d ", temp[i]);
 			}
 
-			printf("input\n");
-			for (int i = 0; i < numResourceTypes + 1; i++) {//+1 for process id
-				printf("%d ", temp[i]);
-			}
-			printf("\n");
-
-			printf("process id: %d\n", temp[0]); //process id
-
-			//put temp in need?
-
-			//saftye algo
+			//$$$$$$$$$$$$$$$$
+			// safety algorithm// if it leaves the system in a safe state,otherwise will deny it.
 			//resource aloc if safe
+			int isSafe = 1;
+
+			//step 1
+
+			int work[numResourceTypes];	//temp avaible array //m
+			int finish[numofCustomers];	//n
+
+			for (int i = 0; i < numResourceTypes; i++) {
+				work[i] = available[i];
+			}
+
+			for (int i = 0; i < numofCustomers - 1; i++) {
+				finish[i] = 0; //false
+			}
+
+			//step 2
+			//find index i
+			//which need and alloc to compare?//use process id?
+
+			for (int i = 0; i < numofCustomers; i++) { //5
+
+				if (finish[i] == 0 && need[processID][i] <= work[i]) { //available[i]) {
+				//printf("yes");
+
+					//step 3
+					work[i] = work[i] + allocated[processID][i];
+
+					finish[i] = 1; //true
+					//break; ///only need 1?
+
+				}
+			}
+
+			//step 4
+			for (int i = 0; i < numofCustomers; i++) { //5
+				if (finish[i] == 0) { //not all true -> not safe
+					isSafe = 0; //false
+				}
+
+			}
+			//printf("isSafe %d\n", isSafe);
+			if (isSafe == 1) { //do resource alloc
+
+				//printf("isSafe %d\n", isSafe);
+
+				printf("State is safe, and request is satisfied\n");
+
+				//update everything
+				//for (int i = 0; i < numofCustomers; i++) { //alloc  = alloc +request?
+
+				for (int j = 0; j < numResourceTypes; j++) //avail = avail - request
+					available[j] -= temp[j];
+
+				for (int j = 0; j < numResourceTypes; j++) //alloc  = alloc +request?
+					allocated[processID][j] += temp[j];
+				//}
+
+				for (int j = 0; j < numResourceTypes; j++) //need = max - request
+					need[processID][j] = maximum[processID][j] - temp[j];
+
+//				for (int i = 0; i < numofCustomers; i++) { //need = max - alloc
+//					for (int j = 0; j < numResourceTypes; j++)
+//						need[i][j] = maximum[i][j] - allocated[i][j];
+//				}
+				/*
+				 //attmpet at resource alloc
+				 for (int i = 1; i < argc; i++) { //not argv[0] //for (int i = 0; i < argc - 1; i++) {
+				 //printf("%s ", available[i]); //d
+				 available[i] = available[i] - 1; //each input //allcoedcted[j][i]? //last value not right?
+				 }
+
+				 for (int i = 0; i < numofCustomers; i++) { //5
+				 for (int j = 0; j < argc - 1; j++) { //4
+				 //printf("%d ", need[i][j]);
+				 need[i][j] = maximum[i][j] - allocated[i][j];
+				 }
+
+				 }
+				 */
+
+			}
 
 		} else if (strcmp(commands, "RL") == 0) {			//command =RL
 			//eg RL 4 1 0 0 0
 			// customer 4 wishes to release the resources (1, 0, 0, 0)
 
 			//get other inputs
-			for (int i = 0; i < numResourceTypes + 1; i++) { //+1 for process id
-				//scanf("%s", &temp[i]);
+
+			scanf("%s", p1);
+			int processID = atoi(p1);
+			//printf("process id: %d\n", processID); //process id
+
+			for (int i = 0; i < numResourceTypes; i++) { //requested
 
 				scanf("%s", p1);
 				temp[i] = atoi(p1);
+				//printf("%d ", temp[i]);
 			}
 
-			printf("input\n");
-			for (int i = 0; i < numResourceTypes + 1; i++) {//+1 for process id
-				printf("%d ", temp[i]);
-			}
-			printf("\n");
+			//realesse:alloc = alloc - input? //opposite of request? //but assume safe?
 
-			printf("process id: %d\n", temp[0]); //process id
+			//update everything
+			//for (int i = 0; i < numofCustomers; i++) { //alloc  = alloc +request?
+
+			for (int j = 0; j < numResourceTypes; j++) //avail = avail - request
+				available[j] += temp[j]; //-= temp[j];
+
+			for (int j = 0; j < numResourceTypes; j++) //alloc  = alloc +request?
+				allocated[processID][j] -= temp[j]; // += temp[j];
+			//}
+
+			for (int j = 0; j < numResourceTypes; j++) //need = max - request
+				need[processID][j] = maximum[processID][j] + temp[j]; //maximum[processID][j] - temp[j];
+
+			printf("The resources have been released successfully\n");
 
 		} else if (strcmp(commands, "Status") == 0) { //command =Status
 
@@ -297,7 +434,6 @@ int main(int argc, char *argv[]) {
 	return 0;
 
 //==========================================OLD
-
 	/*
 	 while (1) {
 
@@ -305,29 +441,9 @@ int main(int argc, char *argv[]) {
 	 printf("Enter Command: ");
 
 	 scanf("%s", commands);	//multi command? expted 5 input at most?
-	 //scanf("%s %d %d %d %d %d",commands, p1, p2, p3, p4, p5); //commands - wrod (RQ). p1- thread number . rest - request nums
-	 //make rest  null if not rq or rl?
-
-	 //just first part of input mathces?
-	 //if (strcmp(commands[0], "RQ") == 0) {
-
-	 //		printf("%c %c", commands[0], commands[1]);
-	 //		char temp[20];
-	 //		temp = commands[0] + commands[1];
-	 //		printf("%d", strcmp(temp, "RQ"));
 
 	 if (strcmp(commands, "RQ") == 0) { //compare
 	 //	eg RQ 0 1 0 0 1 //customer/thread 0 were to request the resources (1, 0, 0, 1)
-
-	 //scanf("%d", p1);
-	 //printf("%d", allocated[p1][0]);
-
-	 //allocated[2][0] = p1;
-
-	 //int t = &p1;
-	 //scanf("%d", &allocated[t][0]);
-
-	 //scanf("%d %d %d %d %d", p1, p2, p3, p4, p5);
 
 	 //do saftey algo here..
 
@@ -441,7 +557,6 @@ int main(int argc, char *argv[]) {
 	 } else if (strcmp(commands, "Run") == 0) {
 	 ;
 
-
 	 //call thred run?
 	 printf("Safe Sequence is: 1 3 2 4 0\n"); //need build up values--thes are p1 values
 	 //threadRun()
@@ -462,7 +577,10 @@ void* threadRun(void *t) {
 
 	printf("\n--> Customer/Thread %d", 1);
 	printf("\nAllocated resources: ");		//1 1 1 1"); //traverse values
+	//print it off? or thread need these saved? //locks on running?
+
 	printf("\nNeeded: "); //3 1 2 1");
+
 	printf("\nAvailable: "); //4 1 3 3");
 
 	printf("\n");
