@@ -201,8 +201,16 @@ int main(int argc, char *argv[]) {
 			//do saftey algo here..
 
 			//saftye algo //to check if this would be safe?
+			int work[5];			//[4]; //temp avaible array
+
 			int isSafe = 1;
 			int finish[5];
+
+			for (int i = 0; i < numofCustomers; i++) { //5
+
+				work[i] = available[i];
+
+			}
 			for (int i = 0; i < numofCustomers; i++) { //5
 				finish[i] = 0; //false
 
@@ -212,10 +220,11 @@ int main(int argc, char *argv[]) {
 
 			for (int i = 0; i < numofCustomers; i++) { //5
 
-				if (finish[i] == 0 && need[i][0] <= available[i]) { //which need and alloc to compare?
+				if (finish[i] == 0 && need[i][0] <= work[i]) { //available[i]) { //which need and alloc to compare?
 					printf("yes");
 
-					available[i] = available[i] + allocated[i][0];
+					work[i] = work[i] + allocated[i][0];
+					//available[i] = available[i] + allocated[i][0];
 					finish[i] = 1; //true
 
 				}
@@ -232,7 +241,33 @@ int main(int argc, char *argv[]) {
 				printf("isSafe %d\n", isSafe);
 //do resource alloc
 
+				printf("State is safe, and request is satisfied\n");
+
+				//update everything
+				//attmpet at resource alloc
+				for (int i = 1; i < argc; i++) { //not argv[0] //for (int i = 0; i < argc - 1; i++) {
+					//printf("%s ", available[i]); //d
+					available[i] = available[i] - 1; //each input //allcoedcted[j][i]? //last value not right?
+				}
+
+				for (int i = 0; i < numofCustomers; i++) { //5
+					for (int j = 0; j < argc - 1; j++) { //4
+						//printf("%d ", need[i][j]);
+						need[i][j] = maximum[i][j] - allocated[i][j];
+					}
+
+				}
+
 			}
+
+			for (int i = 1; i < argc - 1; i++) { //not argv[0] //for (int i = 0; i < argc - 1; i++) {
+				printf("%d ", available[i]); //d
+				printf("%d ", work[i]);
+
+				//work[i] = work[i] - 1; //each input //allcoedcted[j][i]? //last value not right?
+			}
+			printf("\n");
+
 			//assume safe
 			scanf("%d %d %d %d", &allocated[2][0], &allocated[2][1],
 					&allocated[2][2], &allocated[2][3]); //p1 = 2 //how get p1?
@@ -242,19 +277,6 @@ int main(int argc, char *argv[]) {
 			printf("State is safe, and request is satisfied\n");
 
 			//update everything
-
-			for (int i = 1; i < argc; i++) { //not argv[0] //for (int i = 0; i < argc - 1; i++) {
-				//printf("%s ", available[i]); //d
-				available[i] = available[i] - 1; //each input //allcoedcted[j][i]? //last value not right?
-			}
-
-			for (int i = 0; i < numofCustomers; i++) { //5
-				for (int j = 0; j < argc - 1; j++) { //4
-					//printf("%d ", need[i][j]);
-					need[i][j] = maximum[i][j] - allocated[i][j];
-				}
-
-			}
 
 //			for (int i = 0; i < numofCustomers; i++) { //5
 //
@@ -365,8 +387,8 @@ void* threadRun(void *t) {
 	printf("Thread has finished\n");
 	printf("Thread is releasing resources\n");
 
-	//New Available status.
-	//avabile = avialbe + alloc?
+//New Available status.
+//avabile = avialbe + alloc?
 	printf("New Available: "); //5 2 4 4")
 	pthread_exit(0);
 }
