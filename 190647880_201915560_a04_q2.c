@@ -42,10 +42,13 @@
  //how detect hole- if not between process starta nd edn?
  *
  */
+
+// track of which region of memory has been allocated to which process
+//. If a partition being released is adjacent to an existing hole, be sure to combine the two holes into a single hole
 int main(int argc, char *argv[]) {
 	int MAX;
-	MAX = 1000000;
-	//MAX = atoi(argv[2]);
+//	MAX = 1000000;
+	MAX = atoi(argv[1]);
 
 	char commands[20];
 	char p1[20];
@@ -62,7 +65,7 @@ int main(int argc, char *argv[]) {
 	int processCounter = 0, holeCounter = 1;
 
 	holeStarts[0] = 0; //starts from 0 . upt to max
-	holeSize[0] = MAX;
+	holeSize[0] = MAX; //start with block s of memeroy ?
 
 	int min, start;
 	printf("Allocated %d bytes of memory\n", MAX);
@@ -146,8 +149,12 @@ int main(int argc, char *argv[]) {
 			char processNumber[20];
 			scanf("%s", processNumber);
 
-			printf("releasing memory for process %s\n", "P0");
-			printf("Successfully released memory for process %s\n", "P0");
+			printf("releasing memory for process %s\n", processNumber); //"P0");
+			//realse
+//update process areaay and hole arrays //eg remove form lists?
+
+			printf("Successfully released memory for process %s\n",
+					processNumber);
 
 		} else if (strcmp(commands, "Status") == 0) {
 			;
