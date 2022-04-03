@@ -59,8 +59,8 @@ typedef struct customer { //thread
 
 typedef struct thread //represents a single thread
 {
-	char tid[4]; //id of the thread as read from file
-	//int tid; //or change process id and safe sequn type? //no atoi?
+	//char tid[4]; //id of the thread as read from file
+	int tid; //or change process id and safe sequn type? //no atoi?
 
 //add more members here as per requirement
 	//float start_time; //int start_time;
@@ -69,6 +69,9 @@ typedef struct thread //represents a single thread
 
 	pthread_t pt_id; //posix thread id
 
+	int alloc[100]; //1 row [100];
+	int need[100];
+	int available[100];
 } Thread;
 int readFile(char *fileName, Customer **customer) { //read Maximum resources from file
 
@@ -387,47 +390,105 @@ int main(int argc, char *argv[]) { //banker's algorithm.
 			 requests the resources it needs, releases them, and lets the next thread in the sequence run.
 			 */
 
+			/*
+			 * print sequnce
+			 * tid = sequnces[i]
+			 * arrays = arrayu[tid]
+			 * run threads
+			 *
+			 */
+//safe seeuqnce not right?
 			printf("Safe Sequence is: "); //1 3 2 4 0\n"); //need build up values--these are process id values
 			for (int i = 0; i < safeCounter; i++) {
 				printf("%d ", safeSequnce[i]);
 				//threads[i].tid = safeseuqnce[i]?
+				//	printf("%c ", safeSequnce[i] + '0');//int into char
 			}
 			printf("\n");
 
-			char *token = NULL;
-			//int *token = NULL;
-
-//			*token = safeSequnce[0] + '0';
-//						//printf("%c,", token); //printf("%c," * token);
-//						printf("token %s,", token); //*token, &token
-//						
 			Thread *threads; // array
 			//*threads = (Thread*) malloc(sizeof(Thread) * safeCounter); //threadCount);
 			threads = (Thread*) malloc(sizeof(Thread) * safeCounter);
 
-//			char t[5];
-//			itoa(safeSequnce[0], t, 10); //int to str
-//			printf("%s ", t);
+			for (int k = 0; k < safeCounter; k++) { //assing tid
+				int i = safeSequnce[k];
+				;
+				(threads)[k].tid = safeSequnce[k];
 
-			for (int k = 0; k < safeCounter; k++) { //copy id
-				//token = safeSequnce[k] + '0'; //int to char?
-				//strcpy(token, safeSequnce[k] + '0');
-				//(threads)[k].tid = token;
-				token = "1"; //needs to be safe sequence... how conver it //strtok(lines[k], ";");
-
-				strcpy((threads)[k].tid, token); //strcpy((*threads)[k].tid, token);
+				for (int j = 0; j < numResourceTypes; j++) {
+					(threads)[k].alloc[j] = allocated[i][j]; //allocated[safeSequnce[k]];
+					(threads)[k].need[j] = need[i][j];
+					(threads)[k].available[j] = available[j]; //available[i][j];
+				}
 			}
 
+//			char toke[20];
+//
+//			for (int k = 0; k < safeCounter; k++) {
+//				strcpy(toke, safeSequnce[k] + '0');
+//				//int a = safeSequnce[k];
+//				//toke = a + '0';			//safeSequnce[k] + '0';
+//				(threads)[k].tid = toke;
+//			}
+
+			//return 0;
+//
+//			char *token = NULL;
+//			//int *token = NULL;
+//
+////			*token = safeSequnce[0] + '0';
+////						//printf("%c,", token); //printf("%c," * token);
+////						printf("token %s,", token); //*token, &token
+////
+//
+////			char t[5];
+////			itoa(safeSequnce[0], t, 10); //int to str
+////			printf("%s ", t);
+//
+//			for (int k = 0; k < safeCounter; k++) { //copy id
+//				//token = safeSequnce[k] + '0'; //int to char?
+//				//strcpy(token, safeSequnce[k] + '0');
+//				//(threads)[k].tid = token;
+//				token = "1"; //needs to be safe sequence... how conver it //strtok(lines[k], ";");
+//
+//				strcpy((threads)[k].tid, token); //strcpy((*threads)[k].tid, token);
+//			}
+
 			//run them
+			//have to reutnr a value... for  new allcoedted? so alloc = thread alloc?-yes...
 			for (int i = 0; i < safeCounter; i++) { //until no more threads left
 
 				pthread_create(&(threads[i].pt_id), NULL, threadRun,
 						&(threads[i])); //create thread
+
+//				//updaete avalible = avail - alloc //something like this..but in threads? then update from threads?
+				for (int j = 0; j < numResourceTypes; j++) {
+					int k = safeSequnce[i];
+					available[j] = available[j] + allocated[k][j];
+					//(threads)[k].alloc[j] = allocated[i][j]; //allocated[safeSequnce[k]];
+
+					//(threads)[k].available[j] = available[j]; //available[i][j];
+				}
 			}
 
 			for (int i = 0; i < safeCounter; i++) {
 				pthread_join(threads[i].pt_id, NULL);
 			}
+
+			// just resete matraxies  at the end after running //since theyll be relasesd?
+			for (int i = 0; i < numResourceTypes; i++) {
+				available[i] = atoi(argv[i + 1]); //in command line  //not argv[0]
+			}
+
+			//allocated and need
+			for (int i = 0; i < numofCustomers; i++) {
+				for (int j = 0; j < numResourceTypes; j++) {
+
+					allocated[i][j] = 0;
+					need[i][j] = 0;
+				}
+			}
+
 			//=============
 //			Thread *threads = NULL;
 //			*threads = (Thread*) malloc(sizeof(Thread) * safeCounter);
@@ -495,37 +556,67 @@ void* threadRun(void *t) {
 	sem_wait(&sem); //semphore so thread runs fully
 
 	int numResourceTypes = 4; //how get?
-	//int threadNum = ((Thread*) t)->tid)); //1;
+	int temp[numResourceTypes];
 
+	//int threadNum = ((Thread*) t)->tid)); //1;
+	int tid = ((Thread*) t)->tid;
 	//int *tid = ((Thread*) t)->tid;
-	char *tid = ((Thread*) t)->tid;
+	//char *tid = ((Thread*) t)->tid;
 	//threadNum = ((Thread*) t)->tid;
 	//thread have indiv arrays?//or copy paste to acutally allocate and rlease?
 
-	printf("--> Customer/Thread %s\n", tid);	   //threadNum); //%d
+	printf("--> Customer/Thread %d\n", tid);	   //threadNum); //%d //%s
 
 	printf("Allocated resources: ");		//1 1 1 1"); //traverse values
 	for (int j = 0; j < numResourceTypes; j++) { //4
-		printf("%d ", 1); //allocated[threadNum][j]);
+		printf("%d ", ((Thread*) t)->alloc[j]); //1); //allocated[threadNum][j]);
 	}
 	printf("\n");
 
 	printf("Needed: "); //3 1 2 1");
 	for (int j = 0; j < numResourceTypes; j++) {
-		printf("%d ", 1); //need[threadNum][j]);
+		printf("%d ", ((Thread*) t)->need[j]); //1); //need[threadNum][j]);
 	}
 	printf("\n");
 
 	printf("Available: "); //4 1 3 3");
-	for (int i = 0; i < numResourceTypes; i++) {
-		printf("%d ", 1); //available[i]);
+	for (int j = 0; j < numResourceTypes; j++) {
+		printf("%d ", ((Thread*) t)->available[j]); //1); //available[i]);
 	}
 	printf("\n");
 
 	printf("Thread has started\n");
+	//just the realse code agains?
 
-	//update matrix?
-	//availbe = availbe + alloc?
+	//get other inputs
+	//scanf("%s", p1);			//process id
+	//int processID = tid;				//atoi(p1);
+	//printf("process id: %d\n", processID);
+
+	for (int i = 0; i < numResourceTypes; i++) { //requested //to release(alloc?)
+
+		//scanf("%s", p1);
+		temp[i] = (((Thread*) t)->alloc[i]); //allocated[processID][i]; //atoi(p1);
+											 //printf("%d ", temp[i]);
+	}
+
+//release//opposite of request? //but assume safe?
+
+//update everything
+
+	for (int j = 0; j < numResourceTypes; j++) //avail
+		((Thread*) t)->available[j] += temp[j]; //available[j] += temp[j]; //-= temp[j];
+
+	for (int j = 0; j < numResourceTypes; j++) //alloc=alloc - alloc //or just alloc = 0
+		((Thread*) t)->alloc[j] = 0; //allocated[processID][j] -= temp[j]; // += temp[j];
+
+	for (int j = 0; j < numResourceTypes; j++) //need //need = 0?
+		((Thread*) t)->need[j] = 0; //need[processID][j] = maximum[processID][j] + temp[j]; //maximum[processID][j] - temp[j];
+
+	printf("The resources have been released successfully\n");
+
+//update matrix?
+//availbe = availbe + alloc?
 	for (int i = 0; i < numResourceTypes; i++) {
 		;	//available[i] = available[i] + allocated[threadNum][i];
 	}
@@ -542,8 +633,8 @@ void* threadRun(void *t) {
 //New Available status.
 
 	printf("New Available: "); //5 2 4 4")
-	for (int i = 0; i < numResourceTypes; i++) {
-		printf("%d ", 1); //available[i]);
+	for (int j = 0; j < numResourceTypes; j++) {
+		printf("%d ", ((Thread*) t)->available[j]); //1); //available[i]);
 	}
 	printf("\n");
 
