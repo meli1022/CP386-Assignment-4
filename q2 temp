@@ -1,0 +1,447 @@
+/*
+ ------------------------------
+ Authors: Melissa Pinto
+ Phoebe Shulman
+ IDs:	190647880
+ 201915560
+ Github: https://github.com/meli1022/CP386-Assignment-4
+ ------------------------------
+
+ */
+//maybe try first fit first?
+//why is invalid command?--algo not getting input?
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+#include<string.h>
+
+//best fit algo
+//memeory var?[p0:p0,p1:p1,h1:h1] etx
+/**
+ * rq 200
+ * p0: 0 to 200(process size)
+ * hole: process size:max(firts on)
+ *
+ * rq 350
+ * p1: last process end to process size
+ * hole: last last process end + last size to max:(afer look for a process or another hole
+ *
+ * rq 300
+ *  * p2: last process end to process size
+ * hole: last last process end + last size to max:
+ *
+ *
+ * RL P0
+ * new hole: p0 start to p0 end
+ * hole:last last process end + last size to max:
+ *
+ */
+
+/*
+ * num holes = 1
+ * num porces s= 0
+ *
+ * input
+ * np++
+ * nh = 1 still
+ * (only add if split. subtract if combine))
+ *
+ * allocted[0 to max] = 0 //holes
+ *
+ * allcoated[0: inputsize] = 1 //process
+ *
+ *
+ * traverse :find start and end of 0? hole. same for process?
+ *
+ * but much to traverese?
+ * check if overlaping?. process not voerlap with process >hole.
+ */
+/*
+ *
+ * start off as 1 giant whole?
+ * as process come in - fill it up
+ *
+ * eg
+ * 0 to 200 //to start must be put in first slot
+ * 200 to 500
+ * 500 to 700
+ *
+ * but realase process ->eg
+ *  * 0 to 200
+ * h1 = start - size?
+ * 500 to 700
+ *
+ *----
+ *----Allocated memory = sum of sizes
+ *Address [start:start+size] Process P1
+ * //how to rember each?- start matrxi and size matrix?
+
+ Holes = max - allocated
+ Address [0:199999] len = 200000 //holde start: hold start + hole size-1. lne = hole size
+ //how detect hole- if not between process starta nd edn?
+ *
+ */
+
+// track of which region of memory has been allocated to which process
+//. If a partition being released is adjacent to an existing hole, be sure to combine the two holes into a single hole
+typedef struct h {
+
+	//find
+	int size;
+
+	int start;
+	int end; //end = start + size
+	int id; //order in memeory?
+} Hole;
+
+typedef struct p {
+	//inputed
+	char name;
+
+	int size;
+
+	//find
+
+	int start;
+	int end; //end = start + size
+	int id; //order  it was entered- or order of in memeory?
+} Process;
+
+int main(int argc, char *argv[]) {
+	int MAX = atoi(argv[1]);
+
+	Process *processess = NULL;
+	Hole *holes = NULL;
+
+	int numProcesses = 0, numHoles = 1;
+	int totalProcessSize = 0, totalHolesSize = MAX; //add up all lens
+
+	char commands[20];
+
+	//threads = (Thread*) malloc(sizeof(Thread) * safeCounter);
+	processess = (Process*) malloc(sizeof(Process) * 20); //* numProcesses); //or just make it big size?
+	holes = (Hole*) malloc(sizeof(Hole) * 20); //* numHoles);
+
+	(holes)[0].start = 0;
+	(holes)[0].end = MAX - 1;
+	(holes)[0].size = (holes)[0].end - (holes)[0].start;
+	(holes)[0].id = 0; //first hole in memeory
+
+	printf("Allocated %d bytes of memory\n", MAX);
+
+///added: proecces[num processes]? reallco?and remove: processes[process num?]
+
+	//----------
+	char name[100];
+	int size;
+	char algo[100];
+	while (1) { //program loop
+
+		//input
+
+		printf("command>");
+		scanf("%s", commands);
+
+		if (strcmp(commands, "RQ") == 0) { //command =RQ
+			/* RQ <process number> <size> <B>:
+			 * RQ command is the new process that requires the
+			 memory,
+			 followed by the amount of memory being requested,
+			 and finally the algorithm.  (B refers to best fit.)
+			 //RQ P0 20000 B //request for 20,000 bytes
+			 *
+			 */
+
+			//get other inputs
+			scanf("%s", name); //only if valid..need temp
+			scanf("%d", &size);
+			scanf("%s", algo);
+
+			printf("algo %s\n", algo);
+
+//			scanf("%s", &(processess)[numProcesses].name); //only if valid..need temp
+//			scanf("%d", &(processess)[numProcesses].size);
+
+			//printf("%s", &(processess)[numProcesses].name);
+			//printf("%d", (processess)[numProcesses].size);
+
+//			scanf("%s", commands);
+//			//int size = atoi(commands);
+//			(processess)[numProcesses].size = atoi(commands);
+
+			//			char algorithm; //[20]; //... //maybe ingore for now?
+			//			scanf("%c", &algorithm); //c //not getting input?/
+
+			//scanf("%s", &algorithm); //c
+			//printf("%c", algorithm);
+			//printf("%s", algorithm);
+
+			//best fit algo:
+			int isFit = 1;
+			//int min;
+			if (isFit == 1) {
+				//added to processess
+				//processNames[processCounter] = processNumber;
+				//travesr - find smallest hole size
+
+				strcpy(&(processess)[numProcesses].name, name);
+				//	&(processess)[numProcesses].name = name;
+				(processess)[numProcesses].size = size;
+
+				(processess)[numProcesses].start = 0; //holes[best hole.start]//0; //hw find
+				(processess)[numProcesses].end =
+						(processess)[numProcesses].start
+								+ (processess)[numProcesses].size; //hw find
+
+				printf("Successfully allocated %d to process %s\n",
+						(processess)[numProcesses].size,
+						&(processess)[numProcesses].name);
+
+				totalProcessSize += size; //(processess)[numProcesses].size;
+
+				//find if hole was split or not
+//while there 1 hoole.. still only id 1(firt one
+				(holes)[0].size -= size;
+
+				(holes)[0].start = (processess)[numProcesses].end; //0; //holes[best hole.start]//0; //hw find
+				(holes)[0].end = MAX; //need find /next hole start or next process tarts? proces[num +1]?
+//= max or to process[1].start
+
+				numProcesses += 1;
+
+//				printf("Successfully allocated %d to process %s\n",
+//						&(processess)[numProcesses].size,
+//						&(processess)[numProcesses].name); //200000 -var,P0 -var
+
+//				processStarts[processCounter] = start; //i; //0; //have to traverse to find wher can start and fully fit
+//				processSize[processCounter] = size;
+//				processCounter += 1;
+//
+//				//check holes
+//				//update hole-split if need
+//				holeStarts[0] = start + size; //hole starts after process
+//				holeSize[0] = MAX - (start + size); //next hole start - process
+//				//holes[start + size,end]
+//
+//				totalAllocated += size;
+//				totalHoles -= size;
+			} else {
+				printf("No hole of sufficient size\n");
+			}
+
+		} else if (strcmp(commands, "Status") == 0) {
+			;
+			/*
+
+			 Status: The Status command used for reporting the status of memory is entered.
+			 */
+
+			printf("Partitions [Allocated memory = %d]:\n", totalProcessSize); //650000);
+
+			//loop?-num processes
+			for (int i = 0; i < numProcesses; i++) {
+				printf("Address [%d:%d] Process %s\n", (processess)[i].start,
+						(processess)[i].end, &(processess)[i].name);
+
+			}
+
+			printf("\n");
+
+			printf("Holes [Free memory = %d]:\n", totalHolesSize); //350000);
+			//looops?//num holes..//combine holes if they next to each other?
+
+			for (int i = 0; i < numHoles; i++) {
+
+				printf("Address [%d:%d] len = %d\n", (holes)[i].start,
+						(holes)[i].end, (holes)[i].size + 1);
+
+			}
+
+		} else if (strcmp(commands, "Exit") == 0
+				|| strcmp(commands, "q") == 0) {
+			/*
+			 Exit: The Exit command is used to exit the loop and the program.
+			 */
+			break;
+		} else {			// If user enters a wrong command
+			printf("Invalid input, use one of RQ, RL, Status, Exit\n");
+		}
+	}
+	return 0;
+
+}
+
+//=================
+//	for (int i = 0; i < numHoles; i++) {
+//
+//		//(holes)[i].start = 1;
+//printf("")
+//	}
+
+//	&holes[0]->start = 0;
+//	&holes[0]->end = MAX;
+//	&holes[0].size = holes[0].start - holes[0].end;
+//(processess)[0].start = 1; //input
+
+//		printf("Address [%d:%d] len = %d\n", holeStarts[i],
+//				holeStarts[i] + holeSize[i] - 1, holeSize[i]);
+//0, 199999, 200000);
+
+int main2(int argc, char *argv[]) {
+	int MAX;
+//	MAX = 1000000;
+	MAX = atoi(argv[1]);
+
+	char commands[20];
+	char p1[20];
+
+	int totalHoles = MAX;
+	int totalAllocated = 0;
+	//maybe 1 big matrxi? each elem. 0 or 1 if hole ornot?-prob not
+
+	char processNames[100][100]; //1d?
+	int processStarts[100];
+	int processSize[100];
+	int holeStarts[100];
+	int holeSize[100];
+	int processCounter = 0, holeCounter = 1;
+
+	holeStarts[0] = 0; //starts from 0 . upt to max
+	holeStarts[1] = MAX - 1; //need to find differnce betwen 1 hole and next? or hole end and process start?
+	holeSize[0] = MAX; //start with block s of memeroy ?
+
+	int min, start;
+	printf("Allocated %d bytes of memory\n", MAX);
+
+//	for (int i = 0; i < MAX; i++) {
+//		printf("command>");
+//	}
+	while (1) { //program loop
+
+		//input
+		printf("command>");
+		scanf("%s", commands);
+
+		if (strcmp(commands, "RQ") == 0) { //command =RQ
+			/* RQ <process number> <size> <B>:
+			 * RQ command is the new process that requires the
+			 memory,
+			 followed by the amount of memory being requested,
+			 and finally the algorithm.  (B refers to best fit.)
+			 //RQ P0 20000 B //request for 20,000 bytes
+			 *
+			 */
+
+			//get other inputs
+			char processNumber[20];
+			scanf("%s", processNumber);
+			//processNames[0] = processNumber;
+//
+//			char processNumber[20];
+//						scanf("%s", &processNames[processCounter]);
+//
+			scanf("%s", p1);
+			int size = atoi(p1);
+
+//			char algorithm; //[20]; //... //maybe ingore for now?
+//			scanf("%c", &algorithm); //c //not getting input?/
+
+			//scanf("%s", &algorithm); //c
+			//printf("%c", algorithm);
+			//printf("%s", algorithm);
+
+//best fit algo:
+			int isFit = 1;
+
+			if (isFit == 1) {
+				//added to processess
+				//processNames[processCounter] = processNumber;
+				//travesr - find smallest hole size
+
+				min = MAX + 1; //for holesizes:put in it
+				start = 0;
+
+				for (int i = 0; i < holeCounter; i++) {
+					if (holeSize[i] < min) {
+						min = holeSize[i];
+						start = i; //holestarts[i]?
+					}
+
+				}
+				processStarts[processCounter] = start; //i; //0; //have to traverse to find wher can start and fully fit
+				processSize[processCounter] = size;
+				processCounter += 1;
+
+				//check holes
+				//update hole-split if need
+				holeStarts[0] = start + size; //hole starts after process
+				holeSize[0] = MAX - (start + size); //next hole start - process
+				//holes[start + size,end]
+
+				totalAllocated += size;
+				totalHoles -= size;
+				printf("Successfully allocated %d to process %s\n", size,
+						processNumber); //200000 -var,P0 -var
+			} else {
+				printf("No hole of sufficient size\n");
+			}
+
+		} else if (strcmp(commands, "RL") == 0) {
+			/*
+			 * RL <process number/name>:
+			 * RL command will release the memory that has been
+			 allocated to a process (e.g., P0).
+			 *
+			 * //RL P0 //eg
+			 */
+
+			//get other inputs
+			char processNumber[20];
+			scanf("%s", processNumber);
+
+			printf("releasing memory for process %s\n", processNumber); //"P0");
+			//realse
+//update process areaay and hole arrays //eg remove form lists?
+
+			printf("Successfully released memory for process %s\n",
+					processNumber);
+
+		} else if (strcmp(commands, "Status") == 0) {
+			;
+			/*
+
+			 Status: The Status command used for reporting the status of memory is entered.
+			 */
+
+			printf("Partitions [Allocated memory = %d]:\n", totalAllocated); //650000);
+
+			//loop?-num processes
+			for (int i = 0; i < processCounter; i++) {
+				printf("Address [%d:%d] Process %s\n", processStarts[i],
+						processStarts[i] + processSize[i] - 1, processNames[i]); //200000, 549999, "P1");
+			}
+
+			printf("\n");
+
+			printf("Holes [Free memory = %d]:\n", totalHoles); //350000);
+			//looops?//num holes..//combine holes if they next to each other?
+			for (int i = 0; i < holeCounter; i++) {
+				printf("Address [%d:%d] len = %d\n", holeStarts[i],
+						holeStarts[i] + holeSize[i] - 1, holeSize[i]);
+				//0, 199999, 200000);
+			}
+
+		} else if (strcmp(commands, "Exit") == 0
+				|| strcmp(commands, "q") == 0) {
+			/*
+			 Exit: The Exit command is used to exit the loop and the program.
+			 */
+			break;
+		} else {			// If user enters a wrong command
+			printf("Invalid input, use one of RQ, RL, Status, Exit\n");
+		}
+	}
+
+	return 0;
+}
