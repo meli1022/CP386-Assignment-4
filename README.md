@@ -29,7 +29,7 @@ Status - Display current state
 ```
 Enter Command: Status
 ```
-Run - Exectute threads in a safe sequence
+Run - Exectute threads in a safe sequence **(Q1)**
 ```
 Enter Command: Run
 ```
