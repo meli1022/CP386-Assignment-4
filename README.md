@@ -61,6 +61,15 @@ Phoebe -
 `RQ P4 150000 B`
 `RQ P5 80000 B`
 
+## Screenshots:
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/RQ%2CStatus%2CRL%2Cinvalid%2Cexit_part1.png)
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/RQ%2CStatus%2CRL%2Cinvalid%2Cexit_part2.png)
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/example_input_part1.png)
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/example_input_part2.png)
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/example_input_part3.png)
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/q2_out_part1.png)
+![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/q2_out_part2.png)
+
 ## License:
 The license for this program is [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0) which lets people to do almost anything they want with our project, except distributing closed source versions.
 
