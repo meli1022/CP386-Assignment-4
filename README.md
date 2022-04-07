@@ -62,11 +62,16 @@ Phoebe -
 `RQ P5 80000 B`
 
 ## Screenshots:
+testing the commands:
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/RQ%2CStatus%2CRL%2Cinvalid%2Cexit_part1.png)
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/RQ%2CStatus%2CRL%2Cinvalid%2Cexit_part2.png)
+
+Q1:
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/example_input_part1.png)
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/example_input_part2.png)
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/example_input_part3.png)
+
+Q2:
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/q2_out_part1.png)
 ![alt text](https://github.com/meli1022/CP386-Assignment-4/blob/main/q2_out_part2.png)
 
