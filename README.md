@@ -80,7 +80,7 @@ The license for this program is [GNU GPLv3](https://choosealicense.com/licenses/
 
 ## Developers
 - [Melissa Pinto](https://github.com/meli1022)
-- [Phoebe Shulman](https://github.com/Phoebe-S-9)
+- [Phoebe Schulman](https://github.com/Phoebe-S-9)
 
 
 
